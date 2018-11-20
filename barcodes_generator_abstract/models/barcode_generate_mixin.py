@@ -66,7 +66,7 @@ class BarcodeGenerateMixin(models.AbstractModel):
     @api.model
     def _get_custom_barcode(self, item):
         """
-            if the pattern is '23.....{NNNDD}'
+            If the pattern is '23.....{NNNDD}'
             this function will return '23.....00000'
             Note : Overload _get_replacement_char to have another char
             instead that replace 'N' and 'D' char.

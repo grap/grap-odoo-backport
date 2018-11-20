@@ -28,6 +28,6 @@
     ],
     'external_dependencies': {
         'python': [
-            # 'barcode', #  TODO FIXME
+            'barcode',
         ]},
 }
