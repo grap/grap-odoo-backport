@@ -2,8 +2,9 @@
 # Copyright 2018 - Today Sylvain LE GAL (https://twitter.com/legalsylvain)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields
-from odoo.tests.common import TransactionCase
+from openerp import fields
+from openerp import SUPERUSER_ID
+from openerp.tests.common import TransactionCase
 
 
 class TestModule(TransactionCase):
@@ -11,6 +12,7 @@ class TestModule(TransactionCase):
     def setUp(self):
         super(TestModule, self).setUp()
         self.pos_order_obj = self.env['pos.order']
+        self.pos_session_obj = self.env['pos.session']
         self.pos_picking_cron = self.env.ref(
             'pos_picking_delayed.cron_create_delayed_pos_picking')
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
@@ -31,7 +33,7 @@ class TestModule(TransactionCase):
             " feature is enabled")
 
         # run cron and test if picking is now created
-        self.pos_picking_cron.method_direct_trigger()
+        self.pos_picking_cron.run_manually()
 
         self.assertNotEqual(
             order.picking_id.id, False,
@@ -54,7 +56,7 @@ class TestModule(TransactionCase):
             " feature is disabled")
 
         # run cron and test if picking is now created
-        self.pos_picking_cron.method_direct_trigger()
+        self.pos_picking_cron.run_manually()
 
         self.assertEqual(
             order.picking_id.id, picking_id,
@@ -63,7 +65,10 @@ class TestModule(TransactionCase):
 
     def _open_session_create_order(self):
         # Create order
-        self.pos_config.open_session_cb()
+        session = self.pos_session_obj.create({
+            'user_id': SUPERUSER_ID,
+            'config_id': self.pos_config.id,
+        })
         order_data = {
             'id': u'0006-001-0010',
             'to_invoice': False,
@@ -72,14 +77,12 @@ class TestModule(TransactionCase):
                 'name': 'Order 0006-001-0010',
                 'partner_id': False,
                 'amount_paid': 0.9,
-                'pos_session_id': self.pos_config.current_session_id.id,
+                'pos_session_id': session.id,
                 'lines': [[0, 0, {
                     'id': 1,
                     'product_id': self.carotte_product.id,
-                    'tax_ids': [[6, False, []]],
                     'price_unit': 0.9,
                     'qty': 1,
-                    'pack_lot_ids': [],
                     'discount': 0,
                 }]],
                 'statement_ids': [[0, 0, {
@@ -87,9 +90,8 @@ class TestModule(TransactionCase):
                     'amount': 0.9,
                     'name': fields.Datetime.now(),
                     'account_id':
-                    self.env.user.partner_id.property_account_receivable_id.id,
-                    'statement_id':
-                    self.pos_config.current_session_id.statement_ids[0].id,
+                    self.env.user.partner_id.property_account_receivable.id,
+                    'statement_id': session.statement_ids[0].id,
                 }]],
                 'creation_date': u'2018-09-27 15:51:03',
                 'amount_tax': 0,

@@ -5,7 +5,7 @@
 {
     'name': 'Point of Sale - Picking Creation Delayed',
     'summary': 'Delay the creation of the picking when PoS order is created',
-    'version': '10.0.1.0.0',
+    'version': '8.0.1.0.0',
     'category': 'Point Of Sale',
     'author': 'GRAP, '
               'Odoo Community Association (OCA)',
@@ -13,6 +13,7 @@
     'website': 'https://www.github.com/OCA/pos',
     'depends': [
         'point_of_sale',
+        'cron_run_manually',
     ],
     'data': [
         'data/ir_cron.xml',

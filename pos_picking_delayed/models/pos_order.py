@@ -4,7 +4,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from openerp import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -25,11 +25,16 @@ class PosOrder(models.Model):
             session = PosSession.browse(session_id)
             order_data['data']['has_picking_delayed'] =\
                 session.config_id.picking_creation_delayed
-        return super(PosOrder, self.with_context(
-            create_from_ui=True)).create_from_ui(orders)
+        return super(PosOrder, self.with_context()).create_from_ui(orders)
 
+    @api.multi
+    def action_paid(self):
+        return super(PosOrder, self.with_context(
+            from_action_paid=True)).action_paid()
+
+    @api.multi
     def create_picking(self):
-        if self.env.context.get('create_from_ui', False):
+        if self.env.context.get('from_action_paid', False):
             orders = self.filtered(lambda x: not x.has_picking_delayed)
         else:
             orders = self

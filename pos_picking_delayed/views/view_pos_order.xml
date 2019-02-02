@@ -2,7 +2,7 @@
 <!-- Copyright 2018 - Today Sylvain LE GAL (https://twitter.com/legalsylvain)
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).-->
 
-<odoo>
+<openerp><data>
 
     <record id="view_pos_order_tree" model="ir.ui.view">
         <field name="model">pos.order</field>
@@ -27,4 +27,4 @@
         </field>
     </record>
 
-</odoo>
+</data></openerp>
