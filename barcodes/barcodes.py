@@ -59,7 +59,7 @@ class barcode_nomenclature(osv.osv):
         sum1  = ean[1] + ean[3] + ean[5]
         sum2  = ean[0] + ean[2] + ean[4] + ean[6]
         total = sum1 + 3 * sum2
-        return int((10 - total % 10) % 10)
+        return int((10 - int(total) % 10) % 10)
 
     # returns true if the barcode is a valid EAN barcode
     def check_ean(self, ean):
@@ -67,12 +67,13 @@ class barcode_nomenclature(osv.osv):
 
     # returns true if the barcode string is encoded with the provided encoding.
     def check_encoding(self, barcode, encoding):
+        str_barcode = str(barcode)
         if encoding == 'ean13':
-            return len(barcode) == 13 and re.match("^\d+$", barcode) and self.ean_checksum(barcode) == int(barcode[-1]) 
+            return len(str_barcode) == 13 and re.match("^\d+$", str_barcode) and self.ean_checksum(barcode) == int(str_barcode[-1])
         elif encoding == 'ean8':
-            return len(barcode) == 8 and re.match("^\d+$", barcode) and self.ean8_checksum(barcode) == int(barcode[-1])
+            return len(str_barcode) == 8 and re.match("^\d+$", str_barcode) and self.ean8_checksum(barcode) == int(str_barcode[-1])
         elif encoding == 'upca':
-            return len(barcode) == 12 and re.match("^\d+$", barcode) and self.ean_checksum("0"+barcode) == int(barcode[-1])
+            return len(str_barcode) == 12 and re.match("^\d+$", str_barcode) and self.ean_checksum("0"+barcode) == int(str_barcode[-1])
         elif encoding == 'any':
             return True
         else:
