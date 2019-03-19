@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api, fields
+from openerp import models, api, fields
 
 
 class ResCompany(models.Model):

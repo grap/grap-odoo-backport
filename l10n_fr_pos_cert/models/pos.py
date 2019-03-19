@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 from hashlib import sha256
 from json import dumps
 import pytz
 
-from odoo import models, api, fields
-from odoo.fields import Datetime
-from odoo.tools.translate import _
-from odoo.exceptions import UserError
+from openerp import _, models, api, fields
+from openerp.fields import Datetime
+from openerp.exceptions import Warning as UserError
 
 
 def ctx_tz(record, field):
@@ -61,6 +61,13 @@ ERR_MSG = _('According to the French law, you cannot modify a %s. Forbidden fiel
 
 class pos_order(models.Model):
     _inherit = 'pos.order'
+
+    # <GRAP> Add missing fields in V8.
+    # TODO remove this part when migrating in V12.
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position', string='Fiscal Position',
+        readonly=True, states={'draft': [('readonly', False)]})
+    # </GRAP>
 
     l10n_fr_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
     l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
@@ -132,7 +139,11 @@ class pos_order(models.Model):
         if has_been_posted:
             for order in self.filtered(lambda o: o.company_id._is_accounting_unalterable() and
                                                 not (o.l10n_fr_secure_sequence_number or o.l10n_fr_hash)):
-                new_number = order.company_id.l10n_fr_pos_cert_sequence_id.next_by_id()
+                #<GRAP>: Adapt to V8. (Old ORM)
+                # TODO remove this part when migrating in V12.
+                sequence = order.company_id.l10n_fr_pos_cert_sequence_id
+                new_number = sequence.next_by_id(sequence.id)
+                #</GRAP>: Adapt to V8
                 vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
                                 'l10n_fr_hash': order._get_new_hash(new_number)}
                 res |= super(pos_order, order).write(vals_hashing)
@@ -186,6 +197,13 @@ class pos_order(models.Model):
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
+
+    # <GRAP> Add missing fields in V8.
+    # TODO remove this part when migrating in V12.
+    tax_ids_after_fiscal_position = fields.Many2many(
+        comodel_name='account.tax',
+        related='tax_ids', store=True, string='Taxes to Apply')
+    # </GRAP>
 
     @api.multi
     def write(self, vals):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -24,8 +25,9 @@ The module adds following features:
     'auto_install': False,
     'application': False,
     'data': [
-        'data/account_move.xml',
-        'views/res_config.xml',
+        # 'data/account_move.xml',
+        # 'views/res_config.xml',
+        'data/ir_sequence_type.xml',
     ],
-    'post_init_hook': '_setup_inalterability',
+    # 'post_init_hook': '_setup_inalterability',
 }

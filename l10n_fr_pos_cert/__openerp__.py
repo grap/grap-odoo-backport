@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -21,7 +22,17 @@ The module adds following features:
 
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
-    'depends': ['l10n_fr_sale_closing', 'point_of_sale'],
+    'depends': [
+        # <GRAP> Remove useless sale_closing module
+        # 'l10n_fr_sale_closing',
+        # </GRAP>
+        'point_of_sale',
+        # <GRAP> Add dependency to pos_pricelist to have the tax_ids fields
+        # in pos.order.line.
+        # TODO: remove in V10/12.
+        'pos_pricelist',
+        # </GRAP>
+    ],
     'installable': True,
     'auto_install': False,
     'application': False,

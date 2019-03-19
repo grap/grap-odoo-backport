@@ -1,0 +1,9 @@
+
+<openerp>
+    <data>
+        <record id="sequence_journal" model="ir.sequence.type">
+            <field name="code">FRSECUR</field>
+            <field name="name">French Securization</field>
+        </record>
+    </data>
+</openerp>
