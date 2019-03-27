@@ -27,6 +27,7 @@ The module adds following features:
         # 'l10n_fr_sale_closing',
         # </GRAP>
         'point_of_sale',
+        'l10n_fr_certification',
         # <GRAP> Add dependency to pos_pricelist to have the tax_ids fields
         # in pos.order.line.
         # TODO: remove in V10/12.
