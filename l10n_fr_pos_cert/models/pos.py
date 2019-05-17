@@ -202,7 +202,7 @@ class PosOrderLine(models.Model):
     # TODO remove this part when migrating in V12.
     tax_ids_after_fiscal_position = fields.Many2many(
         comodel_name='account.tax',
-        related='tax_ids', store=True, string='Taxes to Apply')
+        related='tax_ids', string='Taxes to Apply')
     # </GRAP>
 
     @api.multi
