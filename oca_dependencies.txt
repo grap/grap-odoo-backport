@@ -1,2 +1,0 @@
-server-tools
-pos                 https://github.com/legalsylvain/pos.git                         8.0_FIX_pos_pricelist_optional_field
