@@ -4,9 +4,16 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='pos_reference']" position='after'>
-                <field string='Hash' name="l10n_fr_hash" groups="base.group_no_one"/>
+            <!-- <GRAP Patch Backport> -->
+<!--             Dedicated place for certification -->
+            <xpath expr="//page[@name='extra']" position='inside'>
+               <group string="French Certification">
+                    <field name="l10n_fr_hash"/>
+                    <field name="l10n_fr_secure_sequence_number"/>
+                    <field name="l10n_fr_string_to_hash"/>
+                </group>
             </xpath>
+            <!-- </GRAP Patch Backport> -->
         </field>
     </record>
 </odoo>

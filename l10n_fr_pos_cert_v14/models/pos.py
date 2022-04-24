@@ -83,7 +83,14 @@ class pos_order(models.Model):
         for order in self:
             values = {}
             for field in ORDER_FIELDS:
-                values[field] = _getattrstring(order, field)
+                # <GRAP Patch Backport>
+                # replace payment_ids by statement_ids
+                # to avoid hash break when migrating into 16.0
+                if field == "payment_ids":
+                    values[field] = _getattrstring(order, "statement_ids")
+                else:
+                    values[field] = _getattrstring(order, field)
+                # </GRAP Patch Backport>
 
             for line in order.lines:
                 for field in LINE_FIELDS:

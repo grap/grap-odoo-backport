@@ -10,13 +10,16 @@ class ReportPosHashIntegrity(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        # <GRAP Patch Backport>
+        # replace various env.company by env.user.company_id
         if data:
-            data.update(self.env.company._check_pos_hash_integrity())
+            data.update(self.env.user.company_id._check_pos_hash_integrity())
         else:
-            data = self.env.company._check_hash_pos_integrity()
+            data = self.env.user.company_id._check_hash_pos_integrity()
         return {
             'doc_ids' : docids,
             'doc_model' : self.env['res.company'],
             'data' : data,
-            'docs' : self.env['res.company'].browse(self.env.company.id),
+            'docs' : self.env['res.company'].browse(self.env.user.company_id.id),
         }
+        # </GRAP Patch Backport>
